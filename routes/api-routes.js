@@ -34,4 +34,23 @@ router.post("/genrerecommendations", (req, res) => {
   })
 })
 
+
+// get artists matching user query
+router.post("/findartist", (req, res) => {
+  let {artist} = req.body;
+  
+  spotifyApi.searchArtists(artist)
+  .then(data => {
+    let foundArtists = data.body.artists.items;
+    let cleanArtists = foundArtists.map(x => {
+      return {name: x.name, id: x.id, image: x.images[0], genres: x.genres, external_urls: x.external_urls.spotify}
+    })
+    res.status(200).json(cleanArtists);
+  })
+  .catch(err => {
+    console.log(err);
+  })
+})
+
+
 module.exports = router;
